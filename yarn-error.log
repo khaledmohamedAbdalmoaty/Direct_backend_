@@ -1,0 +1,49 @@
+Arguments: 
+  /home/khaled/.nvm/versions/node/v16.14.2/bin/node /home/khaled/.nvm/versions/node/v16.14.2/bin/yarn add path
+
+PATH: 
+  /home/khaled/.nvm/versions/node/v16.14.2/bin:/home/khaled/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/media/khaled/Disk_2_319G/1_osl_backup:/media/khaled/Disk_2_319G/1_osl_backup/download-scipts:/media/khaled/Disk_2_319G/1_osl_backup/vscodeScripts:/media/khaled/Disk_2_319G/khaled_2_ubunto/1_obsidian/softwateEngineering/osl_folder:/media/khaled/Disk_2_319G/1_osl_backup:/media/khaled/Disk_2_319G/1_osl_backup/download-scipts:/media/khaled/Disk_2_319G/1_osl_backup/vscodeScripts:/media/khaled/Disk_2_319G/khaled_2_ubunto/1_obsidian/softwateEngineering/osl_folder
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  16.14.2
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, copyfile '/home/khaled/.cache/yarn/v6/npm-mkdirp-1.0.4-3eb5ed62622756d79a5f0e2a221dfebad75c2f7e-integrity/node_modules/mkdirp/lib/find-made.js' -> '/media/khaled/Disk_2_319G/1/graduation_project/backend/node_modules/mkdirp/lib/find-made.js'
+
+npm manifest: 
+  {
+    "name": "graduationproject",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "nodemon index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "keywords": [],
+    "description": "",
+    "dependencies": {
+      "bcrypt": "^5.0.1",
+      "dotenv": "^16.0.0",
+      "express": "^4.17.3",
+      "firebase": "^9.6.7",
+      "g": "^2.0.1",
+      "helmet": "^5.0.2",
+      "mongoose": "^5.12.2",
+      "morgan": "^1.10.0",
+      "nodemon": "^2.0.15"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

@@ -168,20 +168,44 @@ router.put("/:id/like", async (req, res) => {
 
 /* --------------------------- get timeline posts --------------------------- */
 
+/* 
+const user = await UserModel.findOne({_id:req.params.id});
+const userPosts = await PostModel.find({ userId: currentUser._id });
+*/
 
-/* outer.get("/timeline/all", async (req, res) => {
+router.get("/mainPage/posts", async (req, res) => {
   try {
-    const currentUser = await UserModel.findById(req.body.userId);
-    const userPosts = await PostModel.find({ userId: currentUser._id });
-    const friendPosts = await Promise.all(
-      currentUser.followings.map((friendId) => {
-        return PostModel.find({ userId: friendId });
+    const userId=req.query.id
+    if(!userId)return res.status(500).send(`userId is requried`)
+    const {subsribeToChannel} = await UserModel.findById(userId);
+    console.log(` subscript to channel ${subsribeToChannel}` )
+    const  friendPosts = await Promise.all(
+      subsribeToChannel.map((channelId) => {
+        return PostModel
+        .find({channelId})
+        .limit(3)
+        .sort({timestamp:-1}) 
+         .populate('userId','username profilePicture')
+        /* .populate('channelId','channelName');  */
       })
     );
-    res.send(userPosts.concat(...friendPosts))
+
+    let send_posts=[]
+
+   friendPosts.forEach((arr)=>{
+    arr.forEach((data)=>{
+        send_posts.push(data)
+    })
+})
+
+    return res.status(200).send(send_posts)
+    
   } catch (err) {
     res.status(500).send("Error=>"+err);
   }
-}); */
+});
+ 
+
+
 
 module.exports = router;

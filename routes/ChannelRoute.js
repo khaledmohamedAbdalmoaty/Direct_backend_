@@ -101,9 +101,15 @@ router.put("/:id/subscribe", async (req, res) => {
         //we should use transaction but fawn is not working 
         if(!userId || !channelId){return res.status(500).send("userId and channelId is required")}
         try {
+          const {subScribers}=await ChannelModel.findById(channelId)
+          for(i=0;i<subScribers.length;i++){
+            if(subScribers[i]===userId)return res.status(500).send("You alread subscript to channel ")
+            continue
+          }
             const channel=await ChannelModel.findByIdAndUpdate(channelId,{ $push: {  subScribers: userId} });
-           const user = await UserModel.updateOne({uid:userId},{ $push: {  subsribeToChannel: channelId } });
-           res.status(200).send({channel,user});
+           const user = await UserModel.updateOne({_id:userId},{ $push: {  subsribeToChannel: channelId } });
+          /*  res.status(200).send({channel,user});  */
+           res.status(200).send({user});
         } 
        catch (err) {
          res.status(500).send(err);
@@ -122,8 +128,8 @@ router.put("/:id/unsubscribe", async (req, res) => {
 
 try {
     const channel=await ChannelModel.findByIdAndUpdate(channelId,{ $pull: {  subScribers: userId} });
-    const user = await UserModel.updateOne({uid:userId},{ $pull: {  subsribeToChannel: channelId } });
-    res.status(200).send({channel,user});
+    const user = await UserModel.updateOne({_id:userId},{ $pull: {  subsribeToChannel: channelId } });
+    res.status(200).send({channel});
 } 
 catch (err) {
   res.status(500).send(err);

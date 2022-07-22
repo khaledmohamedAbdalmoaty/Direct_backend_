@@ -1,4 +1,4 @@
 #!/bin/bash
 kill -9 $(lsof -i:8800 | awk '{print $2}')
-nodemon  "/media/khaled/Disk_2_319G/1/graduation_project/backend/routes/try.js"
 
+nodemon  "/media/khaled/Disk_2_319G/1/graduation_project/backend/try_server.js"

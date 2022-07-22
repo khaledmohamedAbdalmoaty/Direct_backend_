@@ -13,6 +13,7 @@ const uploadImageSchema={
 
 const conversationSchema=new mongoose.Schema ({
     channelId:String,
+    channelOwnerId:String,
     message:String,
     timestamp:{
         type:Date,

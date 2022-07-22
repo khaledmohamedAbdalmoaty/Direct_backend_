@@ -2,6 +2,7 @@ const router = require("express").Router();
 const PostModel = require("../models/PostModel");
 const UserModel = require("../models/UserModel");
 const {PostCommentsModel}=require('../models/PostCommentsModel')
+const {ConversationModel}=require('../models/ConversationModel')
 
 /* ------------------------------- get post by it's id ------------------------------- */
 
@@ -18,6 +19,7 @@ router.get("/:id", async (req, res) => {
 });
 
 
+
 /* --------------------- get comments of post by post id -------------------- */
 
 router.get("/getComments/:id", async (req, res) => {
@@ -26,7 +28,7 @@ router.get("/getComments/:id", async (req, res) => {
   try {
     const result = await PostCommentsModel
     .find({postId})
-    .populate('whoSendMsg','_id username') 
+    .populate('whoSendMsg','_id username profilePicture') 
     res.status(200).send(result);
   } catch (err) {
     res.status(500).send("Error=>"+err);
@@ -35,6 +37,7 @@ router.get("/getComments/:id", async (req, res) => {
 
 
 /* --------------------------- add comment to post -------------------------- */
+
 router.post("/addComment",async (req,res)=>{
   try{
     const comment={
@@ -124,13 +127,21 @@ router.put("/:id", async (req, res) => {
 
 
 /* ------------------------------ delete a post ----------------------------- */
-
 router.delete("/:id", async (req, res) => {
   try {
     const PostId=req.params.id
-    const post = await PostModel.findById(PostId);      
-    if (post.userId === req.body.userId) {
+    const postOwner=req.body.postOwner
+    const channelOwnerId=req.body.channelOwnerId
+    const msgId=req.body.msgId
+    const post = await PostModel
+    .findById(PostId)
+    .populate({path:'channelId',model:'Channels',populate:{path:'channelOwner',select:{_id:1},model:'Users'}})
+    
+    const realChannelOwner=post.channelId.channelOwner._id
+
+    if ((post.userId ==postOwner) || (channelOwnerId==realChannelOwner)) {
       await PostModel.deleteOne({_id:PostId})
+      await ConversationModel.deleteOne({_id:msgId})
       res.status(200).send(`post has been deleted => ${post}`);
     } else {
       res.status(403).send("you can delete only your post");
@@ -146,19 +157,26 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id/like", async (req, res) => {
   try {
     const userId=req.body.userId
-    const post = await PostModel.findById(req.params.id);
+    const postId=req.params.id
+    console.log(`userId:${userId}`)
+    const post = await PostModel.findById(postId);
     if (!post.likes.includes(userId)) {
       post.likes.push(userId)
+      post.likesCounter=post.likesCounter+1
       await post.save()
+      console.log('add like ')
+      console.log(`like post shape: ${post}`)
       res.status(200).send(`The post has been liked ${post}`);
     } else {
       const index=post.likes.indexOf(`${userId}`)
       post.likes.splice(index,1)
+      post.likesCounter=post.likesCounter-1
       await post.save()
-      res.status(200).send("The post has been disliked");
+      console.log(`dislike post shape: ${post}`)
+      res.status(200).send(`The post has been disliked ${post}`);
     }
   } catch (err) {
-    res.status(500).send("Error=>"+err);
+    res.status(500).send("Error=>"+err.message);
   }
 });
 
@@ -166,8 +184,7 @@ router.put("/:id/like", async (req, res) => {
 
 
 
-/* --------------------------- get timeline posts --------------------------- */
-
+/* ------------------------- 1.last get main page post ------------------------ */
 /* 
 const user = await UserModel.findOne({_id:req.params.id});
 const userPosts = await PostModel.find({ userId: currentUser._id });

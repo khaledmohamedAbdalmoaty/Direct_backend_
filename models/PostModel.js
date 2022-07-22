@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const userSchema={type:mongoose.Schema.Types.ObjectId,ref:'Users',required: true}
 const channelSchema={type:mongoose.Schema.Types.ObjectId,ref:'Channels',required: true}
 const PostSchema = new mongoose.Schema(
-{   counter:Number,
+{   likesCounter:{type:Number,default:0},
     userId:userSchema,
     postPermission:Boolean,
     channelId:channelSchema,
@@ -11,10 +11,8 @@ const PostSchema = new mongoose.Schema(
     },
     imageLocation: String
     ,
-    likes: {
-      type: Array,
-      default: [],
-    },
+    likes:[String]  
+    ,
     timestamp:{
       type:Date,
       default:Date.now()

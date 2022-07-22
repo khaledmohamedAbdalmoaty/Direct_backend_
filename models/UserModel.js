@@ -6,6 +6,8 @@ const Schema=mongoose.Schema
 /* -------------------------------------------------------------------------- */
 const UserSchema = new mongoose.Schema(
     {
+      workTitle:{type:String,default:'please full this field'},
+      About:{type:String,default:'please full this field'},
       username: {
         type: String,
         required: true,
@@ -15,7 +17,7 @@ const UserSchema = new mongoose.Schema(
       uid:{
         type: String
       },
-      userImageLocation:String ,
+      userImageLocation:{type:String,default:'please put your photo'} ,
       email: {
         type: String,
         required: true,
@@ -53,7 +55,3 @@ const UserSchema = new mongoose.Schema(
 
 
 module.exports = mongoose.model("Users", UserSchema);
-
-
-
-

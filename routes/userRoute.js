@@ -2,7 +2,7 @@ const UserModel = require("../models/UserModel");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 
-/* ------------------------------- update user ------------------------------ */
+/* -------------------------------1.update user ------------------------------ */
 router.put("/:id", async (req, res) => {
   if (req.body.userId === req.params.id) {
     if (req.body.password) {
@@ -31,11 +31,11 @@ router.put("/:id", async (req, res) => {
 });
 
 
-/* ---------------------------- change user name ---------------------------- */
+/* ---------------------------- 1. change user name ---------------------------- */
 router.put("/userName/:id", async (req, res) => {
   if (req.body.userId === req.params.id) {
     try {
-      const new_name={username:req.body.username}
+      const new_name={username:req.body.userName}
       const user = await UserModel.updateOne({_id:req.params.id},{
         $set: new_name,
       });
@@ -52,7 +52,7 @@ router.put("/userName/:id", async (req, res) => {
 });
 
   
-/* ------------------------------- delete user ------------------------------ */
+/* -------------------------------1. delete user ------------------------------ */
 
 router.delete("/:id", async (req, res) => {
   
@@ -70,18 +70,18 @@ router.delete("/:id", async (req, res) => {
 
 
 
-/* ------------------------------- get a user by uid ------------------------------- */
+/* ------------------------------- 1. get a user by uid ------------------------------- */
  router.get("/:id", async (req, res) => {
   try {
     const user = await UserModel.findOne({uid:req.params.id});
     const { password, ...other } = user._doc;
     res.status(200).send(other);
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send(err.message);
   }
 }); 
 
-/* -------------------- get user information via it's _id ------------------- */
+/* -------------------- 1. get user information via it's _id ------------------- */
 
 router.get("/id/:id", async (req, res) => {
   try {
@@ -94,23 +94,23 @@ router.get("/id/:id", async (req, res) => {
 }); 
 
 
-/* -------------------- get user _Id via it's uid -------------------- */
+/* -------------------- 1. get user _Id via it's uid -------------------- */
 router.get("/id_/:id", async (req, res) => {
     const uid=req.params.id
-    if(!uid){return res.status(500).send('##Error##')}
+    console.log(`from /id_/:id/=>${uid}`)
   try {
+    if(!uid){return res.status(500).send('##Error##')}
     const user = await UserModel.findOne({uid});
     const {_id,...others}=user
     res.status(200).send({_id});
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send(err.message);
   }
 }); 
 
 
-/* ---------------------- get all user in our database ---------------------- */
+/* ---------------------- 1. get all user in our database ---------------------- */
 router.post("/users",async(req, res) => {
-
 try {
   const users = await UserModel.find({});
   res.status(200).send(users);

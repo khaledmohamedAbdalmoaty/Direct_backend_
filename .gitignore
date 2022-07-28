@@ -1,5 +1,7 @@
 node_modules/
 try.js
 rrr
+.env.local
+public/
 
 
